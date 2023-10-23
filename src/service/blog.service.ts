@@ -39,7 +39,7 @@ export class BlogService {
 
   async list(params: BlogListDTO) {
     const {
-      page = 5,
+      page = 1,
       size = 10,
       order = 'ASC',
       orderBy = 'createdAt',
