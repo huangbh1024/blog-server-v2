@@ -8,6 +8,7 @@ import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
 import * as swagger from '@midwayjs/swagger'; // 引入 swagger 组件
 import * as axios from '@midwayjs/axios'; // 引入 axios 组件
+import * as orm from '@midwayjs/typeorm'; // 引入 orm 组件
 
 @Configuration({
   imports: [
@@ -15,6 +16,7 @@ import * as axios from '@midwayjs/axios'; // 引入 axios 组件
     validate,
     swagger,
     axios,
+    orm,
     {
       component: info,
       enabledEnvironment: ['local'],
