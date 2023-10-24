@@ -58,7 +58,6 @@ export class BlogService {
       .select(['blog', 'tag'])
       .orderBy(`blog.${orderBy}`, order)
       .getManyAndCount();
-    console.log(records);
     return {
       records: records.map(item => ({
         ...item,
