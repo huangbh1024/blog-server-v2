@@ -64,4 +64,10 @@ export class TagController {
   async list(@Query() query: TagListDTO) {
     return await this.tagService.list(query);
   }
+
+  // 获取标签下的博客
+  @Get('/:id/blog')
+  async blog(@Param('id') id: number) {
+    return await this.tagService.blog(id);
+  }
 }

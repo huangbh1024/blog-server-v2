@@ -7,11 +7,15 @@ import {
   TagListDTO,
   TagUpdateDTO,
 } from '../controller/tag.controller';
+import { Blog } from '../entity/blog.entity';
 
 @Provide()
 export class TagService {
   @InjectEntityModel(Tag)
   tagModel: Repository<Tag>;
+
+  @InjectEntityModel(Blog)
+  blogModel: Repository<Blog>;
 
   // 增
   async add(parmas: TagAddDTO) {
@@ -33,5 +37,34 @@ export class TagService {
       take: size,
     });
     return { records, total };
+  }
+
+  async blog(id: number) {
+    // return this.blogModel
+    //   .createQueryBuilder('blog')
+    //   .leftJoinAndSelect('blog.tags', 'tag')
+    //   .where('tag.id = :id', { id })
+    //   .getMany(); // 这样子blog中的tag只会有一个 不符合要求 难顶
+
+    const tag = await this.tagModel.findOneBy({ id });
+    const blogs = await this.blogModel
+      .createQueryBuilder('blog')
+      .innerJoin('blog.tags', 'tag')
+      .where('tag.id = :id', { id })
+      .getMany();
+    const blogIds = blogs.map(blog => blog.id);
+    const [records, total] = await this.blogModel
+      .createQueryBuilder('blog')
+      .innerJoinAndSelect('blog.tags', 'tag')
+      .where('blog.id in (:...ids)', { ids: blogIds })
+      .getManyAndCount();
+    return {
+      records: records.map(blog => ({
+        ...blog,
+        tags: blog.tags.map(tag => tag.name),
+      })),
+      total,
+      tagName: tag.name,
+    };
   }
 }
