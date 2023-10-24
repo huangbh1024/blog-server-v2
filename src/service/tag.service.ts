@@ -49,13 +49,13 @@ export class TagService {
     const tag = await this.tagModel.findOneBy({ id });
     const blogs = await this.blogModel
       .createQueryBuilder('blog')
-      .innerJoin('blog.tags', 'tag')
+      .leftJoin('blog.tags', 'tag')
       .where('tag.id = :id', { id })
       .getMany();
     const blogIds = blogs.map(blog => blog.id);
     const [records, total] = await this.blogModel
       .createQueryBuilder('blog')
-      .innerJoinAndSelect('blog.tags', 'tag')
+      .leftJoinAndSelect('blog.tags', 'tag')
       .where('blog.id in (:...ids)', { ids: blogIds })
       .getManyAndCount();
     return {

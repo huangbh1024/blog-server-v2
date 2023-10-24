@@ -47,7 +47,7 @@ export class BlogService {
     } = params;
     const [records, total] = await this.blogModel
       .createQueryBuilder('blog')
-      .innerJoinAndSelect('blog.tags', 'tag')
+      .leftJoinAndSelect('blog.tags', 'tag')
       // title description content 关键字
       .where(
         'blog.title like :keyword or blog.description like :keyword or blog.content like :keyword',
@@ -70,7 +70,7 @@ export class BlogService {
   async detail(id: number) {
     const blog = await this.blogModel
       .createQueryBuilder('blog')
-      .innerJoinAndSelect('blog.tags', 'tag')
+      .leftJoinAndSelect('blog.tags', 'tag')
       .select(['blog', 'tag'])
       .addSelect('blog.content')
       .where('blog.id = :id', { id })
