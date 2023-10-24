@@ -55,9 +55,10 @@ export class BlogService {
       )
       .skip((page - 1) * size)
       .take(size)
-      .select(['blog', 'tag.name'])
+      .select(['blog', 'tag'])
       .orderBy(`blog.${orderBy}`, order)
       .getManyAndCount();
+    console.log(records);
     return {
       records: records.map(item => ({
         ...item,
@@ -71,7 +72,7 @@ export class BlogService {
     const blog = await this.blogModel
       .createQueryBuilder('blog')
       .innerJoinAndSelect('blog.tags', 'tag')
-      .select(['blog', 'tag.name'])
+      .select(['blog', 'tag'])
       .addSelect('blog.content')
       .where('blog.id = :id', { id })
       .getOne();
