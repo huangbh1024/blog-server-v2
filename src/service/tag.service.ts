@@ -53,18 +53,21 @@ export class TagService {
       .where('tag.id = :id', { id })
       .getMany();
     const blogIds = blogs.map(blog => blog.id);
-    const [records, total] = await this.blogModel
-      .createQueryBuilder('blog')
-      .leftJoinAndSelect('blog.tags', 'tag')
-      .where('blog.id in (:...ids)', { ids: blogIds })
-      .getManyAndCount();
-    return {
-      records: records.map(blog => ({
-        ...blog,
-        tags: blog.tags.map(tag => tag.name),
-      })),
-      total,
-      tagName: tag.name,
-    };
+    if (blogIds.length) {
+      const [records, total] = await this.blogModel
+        .createQueryBuilder('blog')
+        .leftJoinAndSelect('blog.tags', 'tag')
+        .where('blog.id in (:...ids)', { ids: blogIds })
+        .getManyAndCount();
+      return {
+        records: records.map(blog => ({
+          ...blog,
+          tags: blog.tags.map(tag => tag.name),
+        })),
+        total,
+        tagName: tag.name,
+      };
+    }
+    return { records: [], total: 0, tagName: tag.name };
   }
 }
