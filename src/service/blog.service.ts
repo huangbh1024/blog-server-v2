@@ -82,4 +82,26 @@ export class BlogService {
       tags: blog.tags.map(tag => tag.name),
     };
   }
+
+  async archive() {
+    // 根据年份归档
+    const years = await this.blogModel
+      .createQueryBuilder('blog')
+      .select('YEAR(blog.createdAt)', 'year')
+      .groupBy('year')
+      .orderBy('year', 'DESC')
+      .getRawMany();
+    // 根据年份获取博客
+    const blogYears = await Promise.all(
+      years.map(async ({ year }) => {
+        const blogs = await this.blogModel
+          .createQueryBuilder('blog')
+          .where('YEAR(blog.createdAt) = :year', { year })
+          .orderBy('blog.createdAt', 'DESC')
+          .getMany();
+        return { year, blogs };
+      })
+    );
+    return blogYears;
+  }
 }

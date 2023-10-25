@@ -91,4 +91,9 @@ export class BlogController {
   async detail(@Param('id') id: number) {
     return await this.blogService.detail(id);
   }
+
+  @Get('/archive')
+  async archive() {
+    return await this.blogService.archive();
+  }
 }
