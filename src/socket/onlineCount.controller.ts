@@ -1,30 +1,27 @@
 import {
-  WSController,
-  OnWSConnection,
-  WSBroadCast,
-  OnWSDisConnection,
   App,
+  Inject,
+  OnWSConnection,
+  OnWSDisConnection,
+  WSController,
 } from '@midwayjs/core';
-import { Application } from '@midwayjs/ws';
-@WSController()
-export class onlineCountSocketController {
-  @App('webSocket')
-  wsApp: Application;
+import { Application as SocketApplication, Context } from '@midwayjs/socketio';
 
-  @WSBroadCast()
+@WSController('/onlineCount')
+export class onlineCountSocketController {
+  @App('socketIO')
+  socketApp: SocketApplication;
+
+  @Inject()
+  ctx: Context;
+
   @OnWSConnection()
   async onConnectionMethod() {
-    this.wsApp.clients.forEach(client => {
-      if (client.readyState === 1)
-        client.send(JSON.stringify({ onlineCount: this.wsApp.clients.size }));
-    });
+    this.ctx.nsp.emit('onlineCount', this.socketApp.engine.clientsCount);
   }
 
   @OnWSDisConnection()
   async onDisConnectionMethod() {
-    this.wsApp.clients.forEach(client => {
-      if (client.readyState === 1)
-        client.send(JSON.stringify({ onlineCount: this.wsApp.clients.size }));
-    });
+    this.ctx.nsp.emit('onlineCount', this.socketApp.engine.clientsCount);
   }
 }

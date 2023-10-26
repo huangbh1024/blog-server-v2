@@ -18,4 +18,9 @@ export default {
       },
     },
   },
+  socketIO: {
+    cors: {
+      origin: '*',
+    },
+  },
 } as MidwayConfig;

@@ -9,7 +9,7 @@ import { FormatMiddleware } from './middleware/format.middleware';
 import * as swagger from '@midwayjs/swagger'; // 引入 swagger 组件
 import * as axios from '@midwayjs/axios'; // 引入 axios 组件
 import * as orm from '@midwayjs/typeorm'; // 引入 orm 组件
-import * as ws from '@midwayjs/ws'; // 引入 ws 组件
+import * as socketio from '@midwayjs/socketio'; // 引入 socketio 组件
 
 @Configuration({
   imports: [
@@ -18,7 +18,7 @@ import * as ws from '@midwayjs/ws'; // 引入 ws 组件
     swagger,
     axios,
     orm,
-    ws,
+    socketio,
     {
       component: info,
       enabledEnvironment: ['local'],
