@@ -35,8 +35,16 @@ export class TagService {
     const [records, total] = await this.tagModel.findAndCount({
       skip: (page - 1) * size,
       take: size,
+      relations: ['blogs'],
     });
-    return { records, total };
+    return {
+      records: records.map(item => ({
+        ...item,
+        blogCount: item.blogs.length,
+        blogs: undefined,
+      })),
+      total,
+    };
   }
 
   async blog(id: number) {
